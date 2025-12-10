@@ -5,7 +5,20 @@ CXX = g++
 SGG_DIR = ../sgg
 
 CXXFLAGS = -std=c++17 -Wall -Wextra -I. -I$(SGG_DIR)
-LDFLAGS = -L$(SGG_DIR)/lib -lsgg -lGLEW -lSDL2 -lSDL2_mixer -lfreetype -framework OpenGL
+
+# Detect Operating System
+UNAME_S := $(shell uname -s)
+
+# Common libraries
+LIBS = -L$(SGG_DIR)/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype
+
+# OS-Specific Flags
+ifeq ($(UNAME_S), Linux)
+	LDFLAGS = $(LIBS) -lGL -lGLEW
+endif
+ifeq ($(UNAME_S), Darwin)
+	LDFLAGS = $(LIBS) -lGLEW -framework OpenGL -framework Cocoa
+endif
 
 # Source files
 SOURCES = main.cpp

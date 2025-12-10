@@ -94,7 +94,7 @@ int main() {
     
     // Initialize GlobalState
     gs.init();
-
+    
     // Create demo stations (demonstrating polymorphism - Station inherits from VisualAsset)
     Station* syntagma = new Station(400, 200, "Syntagma");
     Station* monastiraki = new Station(250, 300, "Monastiraki");

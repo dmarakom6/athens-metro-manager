@@ -47,6 +47,9 @@ class GlobalState {
             // Initialize game state
             level = 1;
             score = 0;
+
+            // Set the font for text rendering
+            graphics::setFont("assets/fonts/Roboto-Regular.ttf");
             
             // TODO: Initialize stations, create initial UI elements, etc.
         }

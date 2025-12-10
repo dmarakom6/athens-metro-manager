@@ -86,7 +86,7 @@ public:
             float textWidth = name.length() * 8.0f; 
             graphics::drawRect(x, y - radius - 25, textWidth + 10, 20, bgBrush);
             
-            graphics::drawText(x - textWidth/2, y - radius - 20, 14, "Test", textBrush);
+            graphics::drawText(x - textWidth/2, y - radius - 20, 14, name, textBrush);
             
             // Highlight the station
             graphics::Brush highlightBrush = brush;

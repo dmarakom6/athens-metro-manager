@@ -1,0 +1,56 @@
+RUNNING INSTRUCTIONS FOR ATHENS METRO MANAGER
+=============================================
+
+PREREQUISITES
+-------------
+This project uses the Simple Graphics Library (SGG).
+You need a C++ compiler (g++ or clang++) and Make installed.
+
+1. LINUX
+--------
+Dependencies:
+  sudo apt-get update
+  sudo apt-get install build-essential libgl1-mesa-dev libglew-dev libsdl2-dev libsdl2-mixer-dev libfreetype6-dev
+
+Build and Run:
+  make clean
+  make run
+
+2. MACOS (Intel)
+----------------
+Dependencies (using Homebrew):
+  brew install sdl2 sdl2_mixer glew freetype
+
+Build and Run:
+  make clean
+  make run
+
+3. MACOS (Apple Silicon / M1 / M2 / M3)
+---------------------------------------
+Note: The SGG library and dependencies might be installed for x86_64 architecture.
+If you encounter architecture mismatch errors (arm64 vs x86_64), you should run everything in x86_64 mode using Rosetta.
+
+Dependencies (using x86_64 Homebrew):
+  arch -x86_64 /usr/local/bin/brew install sdl2 sdl2_mixer glew freetype
+
+Build and Run:
+  make clean
+  arch -x86_64 make
+  arch -x86_64 ./athens-metro-manager
+
+4. WINDOWS
+----------
+The project is best developed on Linux or macOS.
+For Windows, you would need to:
+1. Install MinGW-w64
+2. Ensure all dependencies (SDL2, GLEW, etc.) are available in the library path
+3. Use the provided Makefile (you might need to adjust paths manually)
+
+TROUBLESHOOTING
+---------------
+- "ld: symbol(s) not found for architecture arm64":
+  This means you are trying to link x86_64 libraries on an ARM64 machine without specifying the architecture.
+  Use `arch -x86_64 make` instead of just `make`.
+
+- "fatal error: 'sgg/graphics.h' file not found":
+  Ensure the SGG library is located in the parent directory (`../sgg`) or update the `SGG_DIR` variable in the Makefile.

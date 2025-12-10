@@ -55,12 +55,47 @@ public:
         // Draw the station as a circle
         graphics::drawDisk(x, y, radius, brush);
 
-        // Draw station name
-        graphics::Brush textBrush;
-        textBrush.fill_color[0] = 1.0f;
-        textBrush.fill_color[1] = 1.0f;
-        textBrush.fill_color[2] = 1.0f;
-        graphics::drawText(x - 30, y + radius + 15, 14, name, textBrush);
+        // Check for hover
+        graphics::MouseState ms;
+        graphics::getMouseState(ms);
+        
+        // Convert mouse position to canvas coordinates
+        float mx = graphics::windowToCanvasX((float)ms.cur_pos_x);
+        float my = graphics::windowToCanvasY((float)ms.cur_pos_y);
+        
+        // Calculate distance squared
+        float dx = mx - x;
+        float dy = my - y;
+        float distSq = dx*dx + dy*dy;
+        
+        // If hovered (distance < radius), draw the name
+        if (distSq < radius * radius) {
+            graphics::Brush textBrush;
+            textBrush.fill_color[0] = 1.0f;
+            textBrush.fill_color[1] = 1.0f;
+            textBrush.fill_color[2] = 1.0f;
+            
+            // Draw a small background for the text for better visibility
+            graphics::Brush bgBrush;
+            bgBrush.fill_color[0] = 0.2f;
+            bgBrush.fill_color[1] = 0.2f;
+            bgBrush.fill_color[2] = 0.2f;
+            bgBrush.fill_opacity = 0.8f;
+            
+            // Estimate text width (rough approximation)
+            float textWidth = name.length() * 8.0f; 
+            graphics::drawRect(x, y - radius - 25, textWidth + 10, 20, bgBrush);
+            
+            graphics::drawText(x - textWidth/2, y - radius - 20, 14, "Test", textBrush);
+            
+            // Highlight the station
+            graphics::Brush highlightBrush = brush;
+            highlightBrush.fill_opacity = 0.5f;
+            highlightBrush.outline_color[0] = 1.0f;
+            highlightBrush.outline_color[1] = 1.0f;
+            highlightBrush.outline_color[2] = 1.0f;
+            graphics::drawDisk(x, y, radius + 2, highlightBrush);
+        }
     }
 
     // Getters and setters

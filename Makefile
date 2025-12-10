@@ -10,7 +10,10 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -I. -I$(SGG_DIR)
 UNAME_S := $(shell uname -s)
 
 # Common libraries
-LIBS = -L$(SGG_DIR)/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype
+LIBS = -L$(SGG_DIR)/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype -ljsoncpp
+
+# Include paths
+CXXFLAGS = -std=c++17 -Wall -Wextra -I. -I$(SGG_DIR) -I/usr/local/include/jsoncpp
 
 # OS-Specific Flags
 ifeq ($(UNAME_S), Linux)

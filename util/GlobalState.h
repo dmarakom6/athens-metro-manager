@@ -4,6 +4,9 @@
 #include <vector>
 #include <memory>
 #include "VisualAsset.h"
+#include <json/json.h>
+#include <fstream>
+#include <iostream>
 
 /**
  * @brief Singleton class that manages the global state of the Athens Metro Manager application.
@@ -51,7 +54,14 @@ class GlobalState {
             // Set the font for text rendering
             graphics::setFont("assets/fonts/Roboto-Regular.ttf");
             
-            // TODO: Initialize stations, create initial UI elements, etc.
+            // Initialize stations, create initial UI elements, etc.
+
+            std::ifstream people_file("assets/metro3.json", std::ifstream::binary);
+            Json::Value metro;
+            people_file >> metro;
+
+            std::cout << metro << std::endl;
+
         }
 
         /**
@@ -62,10 +72,14 @@ class GlobalState {
          * allowing them to update their state (movement, animations, etc.)
          */
         void update(int ms) {
+            // Get mouse state once per frame
+            graphics::MouseState mouse;
+            graphics::getMouseState(mouse);
+
             // Update all visual assets
             for (auto* asset : visualAssets) {
                 if (asset && asset->isActive()) {
-                    asset->update(ms);
+                    asset->update(ms, mouse);
                 }
             }
             

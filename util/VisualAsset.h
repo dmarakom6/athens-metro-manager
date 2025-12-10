@@ -1,6 +1,8 @@
 #ifndef VISUAL_ASSET_H
 #define VISUAL_ASSET_H
 
+#include <sgg/graphics.h>
+
 /**
  * @brief Base class for all visual elements in the Athens Metro Manager application.
  * 
@@ -34,11 +36,12 @@ public:
     /**
      * @brief Pure virtual method to update the asset's state
      * @param ms Milliseconds elapsed since last update
+     * @param mouse Current mouse state
      * 
      * This method should be overridden by derived classes to implement
      * their specific update logic (e.g., movement, animations, state changes).
      */
-    virtual void update(int ms) = 0;
+    virtual void update(int ms, const graphics::MouseState& mouse) = 0;
 
     /**
      * @brief Pure virtual method to draw the asset on screen

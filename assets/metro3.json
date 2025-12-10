@@ -1,0 +1,58 @@
+{
+    "stations": [
+        {
+            "name": "Syntagma",
+            "connections": [
+                "Monastiraki",
+                "Evangelismos"
+            ]
+        },
+        {
+            "name": "Monastiraki",
+            "connections": [
+                "Syntagma",
+                "Thissio",
+                "Omonia"
+            ]
+        },
+        {
+            "name": "Evangelismos",
+            "connections": [
+                "Syntagma",
+                "Megaro Mousikis"
+            ]
+        },
+        {
+            "name": "Omonia",
+            "connections": [
+                "Monastiraki",
+                "Panepistimio"
+            ]
+        },
+        {
+            "name": "Thissio",
+            "connections": [
+                "Monastiraki",
+                "Petralona"
+            ]
+        },
+        {
+            "name": "Megaro Mousikis",
+            "connections": [
+                "Evangelismos"
+            ]
+        },
+        {
+            "name": "Panepistimio",
+            "connections": [
+                "Omonia"
+            ]
+        },
+        {
+            "name": "Petralona",
+            "connections": [
+                "Thissio"
+            ]
+        }
+    ]
+}

@@ -2,6 +2,12 @@
 #include <sgg/graphics.h>
 #include "util/GlobalState.h"
 #include "util/Station.h"
+#include <fstream>
+#include <string>
+#include <vector>
+#include <map>
+#include <random>
+#include <chrono>
 
 // Forward declarations for callback functions
 void draw();
@@ -95,19 +101,66 @@ int main() {
     // Initialize GlobalState
     gs.init();
     
-    // Create demo stations (demonstrating polymorphism - Station inherits from VisualAsset)
-    Station* syntagma = new Station(400, 200, "Syntagma");
-    Station* monastiraki = new Station(250, 300, "Monastiraki");
-    Station* omonia = new Station(400, 400, "Omonia");
-    Station* acropoli = new Station(550, 300, "Acropoli");
-    Station* panepistimio = new Station(400, 300, "Panepistimio");
 
-    // Add stations to GlobalState (polymorphic - stored as VisualAsset*)
-    gs.addVisualAsset(syntagma);
-    gs.addVisualAsset(monastiraki);
-    gs.addVisualAsset(omonia);
-    gs.addVisualAsset(acropoli);
-    gs.addVisualAsset(panepistimio);
+
+    // Get GlobalState instance
+
+
+    // Seed random number generator
+    std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> x_dist(50, gs.getWindowWidth() - 50); // Avoid edges
+    std::uniform_int_distribution<int> y_dist(150, gs.getWindowHeight() - 50); // Avoid top for title/score
+
+    std::map<std::string, Station*> stations_map;
+
+    try {
+        std::ifstream f("assets/metro3.json");
+        if (!f.is_open()) {
+            throw std::runtime_error("Could not open assets/metro3.json");
+        }
+        Json::Value data;
+        f >> data;
+
+        // First pass: Create all stations and add them to the map and GlobalState
+        if (data.isMember("stations") && data["stations"].isArray()) {
+            for (const auto& station_json : data["stations"]) {
+                if (station_json.isMember("name") && station_json["name"].isString()) {
+                    std::string name = station_json["name"].asString();
+                    int random_x = x_dist(rng);
+                    int random_y = y_dist(rng);
+                    Station* station = new Station(random_x, random_y, name);
+                    stations_map[name] = station;
+                    gs.addVisualAsset(station);
+                }
+            }
+        }
+
+        // Second pass: Establish connections
+        if (data.isMember("stations") && data["stations"].isArray()) {
+            for (const auto& station_json : data["stations"]) {
+                if (station_json.isMember("name") && station_json["name"].isString()) {
+                    std::string name = station_json["name"].asString();
+                    Station* current_station = stations_map[name];
+
+                    if (station_json.isMember("connections") && station_json["connections"].isArray()) {
+                        for (const auto& connection_name_json : station_json["connections"]) {
+                            if (connection_name_json.isString()) {
+                                std::string connection_name = connection_name_json.asString();
+                                if (stations_map.count(connection_name)) {
+                                    current_station->addNext(stations_map[connection_name]);
+                                } else {
+                                    std::cerr << "Warning: Connection to unknown station '" << connection_name << "' for station '" << name << "'" << std::endl;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    } catch (const std::runtime_error& e) {
+        std::cerr << "File error: " << e.what() << std::endl;
+        // Fallback or exit if file is critical
+    }
 
     std::cout << "Athens Metro Manager Demo Started!" << std::endl;
     std::cout << "Demonstrating:" << std::endl;

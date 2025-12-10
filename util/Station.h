@@ -17,6 +17,14 @@ private:
     float radius;
     graphics::Brush brush;
     int passengerCount;
+    // Graph connectivity
+    std::vector<Station*> next;
+    std::vector<Station*> prev;
+
+    // Dragging state
+    bool isDragging;
+    float dragOffsetX;
+    float dragOffsetY;
 
 public:
     /**
@@ -27,7 +35,8 @@ public:
      * @param r Radius of the station circle
      */
     Station(float posX, float posY, const std::string& stationName, float r = 20.0f)
-        : VisualAsset(posX, posY), name(stationName), radius(r), passengerCount(0) {
+        : VisualAsset(posX, posY), name(stationName), radius(r), passengerCount(0), 
+          isDragging(false), dragOffsetX(0.0f), dragOffsetY(0.0f) {
         // Set up the brush for drawing
         brush.fill_color[0] = 0.2f;  // R
         brush.fill_color[1] = 0.6f;  // G
@@ -37,13 +46,51 @@ public:
     }
 
     /**
+     * @brief Connect this station to another station (directed edge)
+     * @param other The next station
+     */
+    void addNext(Station* other) {
+        if (other) {
+            next.push_back(other);
+            other->prev.push_back(this); // Maintain the doubly-linked nature
+        }
+    }
+
+    /**
      * @brief Update the station state
      * @param ms Milliseconds elapsed since last update
+     * @param mouse Current mouse state
      */
-    void update(int ms) override {
+    void update(int ms, const graphics::MouseState& mouse) override {
         (void)ms; // Suppress unused parameter warning
-        // Station update logic (e.g., passenger spawning, etc.)
-        // For demo purposes, we'll just keep it simple
+        
+        // Convert mouse position to canvas coordinates
+        float mx = graphics::windowToCanvasX((float)mouse.cur_pos_x);
+        float my = graphics::windowToCanvasY((float)mouse.cur_pos_y);
+
+        if (mouse.button_left_pressed) {
+            if (!isDragging) {
+                // Check if clicked on this station
+                float dx = mx - x;
+                float dy = my - y;
+                float distSq = dx*dx + dy*dy;
+
+                // Only start dragging if mouse is inside the station radius
+                // AND we are not currently dragging another station (simple check)
+                if (distSq < radius * radius) {
+                    isDragging = true;
+                    dragOffsetX = mx - x;
+                    dragOffsetY = my - y;
+                }
+            } else {
+                // Continue dragging
+                x = mx - dragOffsetX;
+                y = my - dragOffsetY;
+            }
+        } else {
+            // Stop dragging
+            isDragging = false;
+        }
     }
 
     /**
@@ -51,6 +98,22 @@ public:
      */
     void draw() override {
         if (!active) return;
+
+        // Draw connections to next stations (edges)
+        // We only draw 'next' connections to avoid drawing lines twice
+        graphics::Brush lineBrush;
+        lineBrush.fill_opacity = 0.0f;
+        lineBrush.outline_opacity = 1.0f;
+        lineBrush.outline_width = 4.0f;
+        lineBrush.outline_color[0] = 0.5f;
+        lineBrush.outline_color[1] = 0.5f;
+        lineBrush.outline_color[2] = 0.5f;
+
+        for (Station* s : next) {
+            if (s && s->isActive()) {
+                graphics::drawLine(x, y, s->getX(), s->getY(), lineBrush);
+            }
+        }
 
         // Draw the station as a circle
         graphics::drawDisk(x, y, radius, brush);
@@ -68,8 +131,8 @@ public:
         float dy = my - y;
         float distSq = dx*dx + dy*dy;
         
-        // If hovered (distance < radius), draw the name
-        if (distSq < radius * radius) {
+        // If hovered (distance < radius) or dragging, draw the name
+        if (distSq < radius * radius || isDragging) {
             graphics::Brush textBrush;
             textBrush.fill_color[0] = 1.0f;
             textBrush.fill_color[1] = 1.0f;

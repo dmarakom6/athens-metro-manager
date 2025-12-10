@@ -10,7 +10,7 @@ You need a C++ compiler (g++ or clang++) and Make installed.
 --------
 Dependencies:
   sudo apt-get update
-  sudo apt-get install build-essential libgl1-mesa-dev libglew-dev libsdl2-dev libsdl2-mixer-dev libfreetype6-dev
+  sudo apt-get install build-essential libgl1-mesa-dev libglew-dev libsdl2-dev libsdl2-mixer-dev libfreetype6-dev libjsoncpp-dev
 
 Build and Run:
   make clean
@@ -19,7 +19,7 @@ Build and Run:
 2. MACOS (Intel)
 ----------------
 Dependencies (using Homebrew):
-  brew install sdl2 sdl2_mixer glew freetype
+  brew install sdl2 sdl2_mixer glew freetype jsoncpp
 
 Build and Run:
   make clean
@@ -31,7 +31,7 @@ Note: The SGG library and dependencies might be installed for x86_64 architectur
 If you encounter architecture mismatch errors (arm64 vs x86_64), you should run everything in x86_64 mode using Rosetta.
 
 Dependencies (using x86_64 Homebrew):
-  arch -x86_64 /usr/local/bin/brew install sdl2 sdl2_mixer glew freetype
+  arch -x86_64 /usr/local/bin/brew install sdl2 sdl2_mixer glew freetype jsoncpp
 
 Build and Run:
   make clean

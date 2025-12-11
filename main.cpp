@@ -8,6 +8,10 @@
 #include <map>
 #include <random>
 #include <chrono>
+#include <queue>
+#include <map>
+#include <cmath>
+#include "util/SimulateButton.h"
 
 // Forward declarations for callback functions
 void draw();
@@ -77,6 +81,122 @@ void update(float ms) {
     }
 }
 
+// Forward declaration
+void runSimulation();
+
+void runSimulation() {
+    GlobalState& gs = GlobalState::getInstance();
+    const auto& assets = gs.getVisualAssets();
+    std::vector<Station*> stations;
+    
+    // Filter stations
+    for (auto* asset : assets) {
+        Station* s = dynamic_cast<Station*>(asset);
+        if (s) {
+            stations.push_back(s);
+        }
+    }
+
+    if (stations.size() < 2) {
+        std::cout << "Not enough stations to simulate." << std::endl;
+        return;
+    }
+
+    std::cout << "\n--- Starting Simulation (8 Passengers) ---\n" << std::endl;
+
+    std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
+    std::uniform_int_distribution<int> dist(0, stations.size() - 1);
+
+    for (int i = 0; i < 8; ++i) {
+        Station* start = stations[dist(rng)];
+        Station* end = stations[dist(rng)];
+
+        // Ensure start != end
+        int attempts = 0;
+        while (start == end && attempts < 10) {
+            end = stations[dist(rng)];
+            attempts++;
+        }
+
+        if (start == end) {
+             std::cout << "Passenger " << i + 1 << ": Stayed at " << start->getName() << " (Time: 0)" << std::endl;
+             continue;
+        }
+
+        // BFS for pathfinding (poor source management but easy to implement)
+        std::queue<std::pair<Station*, std::vector<Station*>>> q; // we need fifo for this: (Station, Path to this Station)
+        std::map<Station*, bool> visited;
+        
+        q.push({start, {start}});
+        visited[start] = true;
+
+        bool found = false;
+        std::vector<Station*> path;
+
+        while (!q.empty()) {
+            auto current_pair = q.front();
+            q.pop();
+            Station* curr = current_pair.first;
+            std::vector<Station*> curr_path = current_pair.second;
+
+            if (curr == end) {
+                found = true;
+                path = curr_path;
+                break;
+            }
+
+            for (Station* neighbor : curr->getNext()) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    std::vector<Station*> new_path = curr_path;
+                    new_path.push_back(neighbor);
+                    q.push({neighbor, new_path});
+                }
+            }
+        }
+
+        if (found) {
+            // Calculate Path Distance (Sum of edge segments)
+            float total_distance = 0.0f;
+            for (size_t j = 0; j < path.size() - 1; ++j) {
+                float dx = path[j]->getX() - path[j+1]->getX();
+                float dy = path[j]->getY() - path[j+1]->getY();
+                total_distance += std::sqrt(dx*dx + dy*dy);
+            }
+
+            // Calculate Direct Distance (Best case scenario / As the crow flies)
+            float start_x = start->getX();
+            float start_y = start->getY();
+            float end_x = end->getX();
+            float end_y = end->getY();
+            float direct_distance_sq = (end_x - start_x)*(end_x - start_x) + (end_y - start_y)*(end_y - start_y);
+            float direct_distance = std::sqrt(direct_distance_sq);
+
+            std::cout << "Passenger " << i + 1 << ": " << start->getName() << " -> " << end->getName() 
+                      << " | Metro Time: " << (int)total_distance 
+                      << " | Direct Distance (Best): " << (int)direct_distance 
+                      << " | Deviation: " << (int)(total_distance - direct_distance) << std::endl;
+        } else {
+             std::cout << "Passenger " << i + 1 << ": " << start->getName() << " -> " << end->getName() 
+                      << " | Path not found!" << std::endl;
+        }
+    }
+    std::cout << "\n--- Simulation Ended ---\n" << std::endl;
+}
+
+// Helper to add button
+void setupSimulationButton() {
+     GlobalState& gs = GlobalState::getInstance();
+     // Place button at bottom right
+     float btnW = 120.0f;
+     float btnH = 40.0f;
+     float btnX = gs.getWindowWidth() - btnW/2 - 20; 
+     float btnY = gs.getWindowHeight() - btnH/2 - 20;
+     
+     SimulateButton* btn = new SimulateButton(btnX, btnY, btnW, btnH, "Simulate", runSimulation);
+     gs.addVisualAsset(btn);
+}
+
 /**
  * @brief Main entry point
  * 
@@ -101,6 +221,7 @@ int main() {
     // Initialize GlobalState
     gs.init();
     
+    setupSimulationButton();
 
 
     // Get GlobalState instance

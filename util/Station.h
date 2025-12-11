@@ -168,6 +168,14 @@ public:
     int getPassengerCount() const { return passengerCount; }
     void addPassenger() { passengerCount++; }
     void removePassenger() { if (passengerCount > 0) passengerCount--; }
+
+    /**
+     * @brief Get adjacent stations (outgoing edges)
+     * @return Vector of pointers to next stations
+     */
+    const std::vector<Station*>& getNext() const {
+        return next;
+    }
 };
 
 #endif // STATION_H

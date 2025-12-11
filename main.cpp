@@ -126,8 +126,37 @@ int main() {
             for (const auto& station_json : data["stations"]) {
                 if (station_json.isMember("name") && station_json["name"].isString()) {
                     std::string name = station_json["name"].asString();
-                    int random_x = x_dist(rng);
-                    int random_y = y_dist(rng);
+                    int random_x, random_y;
+                    bool position_found = false;
+                    const int MIN_SPACING_SQUARED = 100 * 100; // Minimum distance squared
+
+                    // Try to find a non-overlapping position
+                    int attempts = 0;
+                    const int MAX_ATTEMPTS = 1000; // Prevent infinite loops in dense scenarios
+                    while (!position_found && attempts < MAX_ATTEMPTS) {
+                        random_x = x_dist(rng);
+                        random_y = y_dist(rng);
+                        position_found = true; // Assume position is good until collision is found
+
+                        for (const auto& pair : stations_map) {
+                            Station* existing_station = pair.second;
+                            float dx = random_x - existing_station->getX();
+                            float dy = random_y - existing_station->getY();
+                            if ((dx * dx + dy * dy) < MIN_SPACING_SQUARED) {
+                                position_found = false; // Collision detected, try again
+                                break;
+                            }
+                        }
+                        attempts++;
+                    }
+
+                    if (!position_found) {
+                        std::cerr << "Warning: Could not find a non-overlapping position for station '" << name << "' after " << MAX_ATTEMPTS << " attempts. Placing it anyway." << std::endl;
+                        // Fallback: place it even if it overlaps, or handle error
+                        random_x = x_dist(rng); // Place randomly one last time
+                        random_y = y_dist(rng);
+                    }
+
                     Station* station = new Station(random_x, random_y, name);
                     stations_map[name] = station;
                     gs.addVisualAsset(station);

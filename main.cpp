@@ -111,6 +111,8 @@ void runSimulation() {
         Station* start = stations[dist(rng)];
         Station* end = stations[dist(rng)];
 
+        //TODO: CREATE PASSENGER OBJECT 
+
         // Ensure start != end
         int attempts = 0;
         while (start == end && attempts < 10) {
@@ -164,7 +166,7 @@ void runSimulation() {
                 total_distance += std::sqrt(dx*dx + dy*dy);
             }
 
-            // Calculate Direct Distance (Best case scenario / As the crow flies)
+            // Calculate Direct Distance (Best case scenario)
             float start_x = start->getX();
             float start_y = start->getY();
             float end_x = end->getX();
@@ -180,6 +182,10 @@ void runSimulation() {
              std::cout << "Passenger " << i + 1 << ": " << start->getName() << " -> " << end->getName() 
                       << " | Path not found!" << std::endl;
         }
+
+        //TODO: DELETE PASSENGER OBJECT
+
+
     }
     std::cout << "\n--- Simulation Ended ---\n" << std::endl;
 }

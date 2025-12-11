@@ -20,7 +20,8 @@ ifeq ($(UNAME_S), Linux)
 	LDFLAGS = $(LIBS) -lGL -lGLEW
 endif
 ifeq ($(UNAME_S), Darwin)
-	LDFLAGS = $(LIBS) -lGLEW -framework OpenGL -framework Cocoa
+	CXXFLAGS += -arch x86_64
+	LDFLAGS = -arch x86_64 $(LIBS) -lGLEW -framework OpenGL -framework Cocoa
 endif
 
 # Source files

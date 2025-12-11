@@ -25,14 +25,19 @@ public:
         : VisualAsset(posX, posY), width(w), height(h), text(label), onClickCallback(callback), 
           isHovered(false), wasPressed(false) 
     {}
-
     void update(int ms, const graphics::MouseState& mouse) override {
         (void)ms;
         
         float mx = graphics::windowToCanvasX((float)mouse.cur_pos_x);
         float my = graphics::windowToCanvasY((float)mouse.cur_pos_y);
 
-        if (mx >= x && mx <= x + width && my >= y && my <= y + height) {
+        // Calculate button bounds based on center (x, y) and dimensions (width, height)
+        float left = x - width / 2.0f;
+        float right = x + width / 2.0f;
+        float top = y - height / 2.0f;
+        float bottom = y + height / 2.0f;
+
+        if (mx >= left && mx <= right && my >= top && my <= bottom) {
             isHovered = true;
             if (mouse.button_left_pressed && !wasPressed) {
                 if (onClickCallback) {

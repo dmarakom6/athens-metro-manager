@@ -1,4 +1,4 @@
-athens-metro-manager
+﻿athens-metro-manager
 .DS_Store
 
 # Prerequisites
@@ -42,3 +42,6 @@ athens-metro-manager
 
 # debug information files
 *.dwo
+
+# intellij stuff
+*.idea

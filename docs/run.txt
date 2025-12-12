@@ -9,8 +9,8 @@ You need a C++ compiler (g++ or clang++) and Make installed.
 1. LINUX
 --------
 Try running this in terminal:
-  g++ -std=c++17 -Wall -Wextra -I. -I../sgg -I/usr/include/jsoncpp main.cpp -o athens-metro-manager \
-      -L../sgg/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype -ljsoncpp -lGL -lGLEW && ./athens-metro-manager
+  g++ -std=c++17 -Wall -Wextra     -I. -I../sgg -I/usr/include/jsoncpp     main.cpp -o athens-metro-manager  \
+  -L../sgg/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype -ljsoncpp -lGL -lGLEW
 
 else:
 

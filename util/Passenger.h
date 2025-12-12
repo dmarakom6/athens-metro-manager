@@ -18,8 +18,8 @@ public:
         brush.fill_color[0] = 0.2f;
         brush.fill_color[1] = 0.6f;
         brush.fill_color[2] = 0.9f;
-        brush.outline_opacity = 1.0f;
-        brush.outline_width = 3.0f;
+        brush.outline_opacity = 0.9f;
+        brush.outline_width = 1.0f;
     }
 
     void draw() override

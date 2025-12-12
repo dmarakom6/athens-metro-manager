@@ -12,6 +12,7 @@ class Train : public VisualAsset
 {
 private:
     Brush brush;
+	int passengerCount;
 
 public:
     Train(float posX, float posY, std::vector Passengers) : VisualAsset(posX, posY)

@@ -25,10 +25,8 @@ public:
     void draw() override
     {
         if (!active) return;
-        graphics::drawDisk(posX, posY, 100, 200, brush);
+        drawDisk(posX, posY, 100, 200, brush);
     }
-
-    //TODO: GETTERS FOR POSITION IF NEEDED
 };
 
 #endif // PASSENGER_H

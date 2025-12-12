@@ -16,8 +16,35 @@ private:
 public:
     Train(float posX, float posY, std::vector Passengers) : VisualAsset(posX, posY)
     {
-        //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
-    }
+
+	brush.fill_color[3] = {0.6f, 0.4f, 0.3f};
+	void draw() override {
+
+	drawRect(posX, posY, brush);
+
+
+
+
+
+
+
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	 //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
+	};
 
 
 

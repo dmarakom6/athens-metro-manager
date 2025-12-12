@@ -19,7 +19,9 @@ public:
     {
         x = posX;
         y = posY;
-        brush.fill_color = {160.0f, 160.0f, 160.0f};
+        brush.fill_color[0] = 160.0f;
+        brush.fill_color[1] = 160.0f;
+        brush.fill_color[2] = 160.0f;
         passengerCount = Passengers.size();
     }
 

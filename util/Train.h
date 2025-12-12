@@ -24,25 +24,29 @@ public:
     }
 
 
+    void draw() override
+    {
+        drawRect(x, y, 70, 45, brush);
+    }
 
-        void draw() override
-        {
-            drawRect(x, y, 70, 45, brush);
-        }
-        void update(int ms, const graphics::MouseState& mouse) override{};
-
-        void removePassenger(int n) const {
-              if (n > passengerCount) return;
-        }
-        void addPassenger() const
-        {
-            return;
-        }
-
-        //Get number of Passengers
-        int getPassengerCount() const { return passengerCount; }
-
-        //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
+    void update(int ms, const graphics::MouseState& mouse) override
+    {
     };
+
+    void removePassenger(int n) const
+    {
+        if (n > passengerCount) return;
+    }
+
+    void addPassenger() const
+    {
+        return;
+    }
+
+    //Get number of Passengers
+    int getPassengerCount() const { return passengerCount; }
+
+    //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
+};
 
 #endif // TRAIN_H

@@ -292,7 +292,8 @@ int main() {
                     Passenger* pas = new Passenger(100, 50);
                     gs.addVisualAsset(pas);
                     std::vector<Passenger*> passengersss= {pas};
-                    Τrain* tr = new Train(200, 80, passengersss);
+                    Train* tr = new Train(200, 80, passengersss);
+                    gs.addVisualAsset(tr);
 
 
                 }

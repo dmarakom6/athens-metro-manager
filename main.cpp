@@ -289,9 +289,12 @@ int main() {
                     Station* station = new Station(random_x, random_y, name);
                     stations_map[name] = station;
                     gs.addVisualAsset(station);
-
-                    Passenger* pas = new Passenger(300, 300);
+                    Passenger* pas = new Passenger(100, 50);
                     gs.addVisualAsset(pas);
+                    std::vector<Passenger*> passengersss= {pas};
+                    Τrain* tr = new Train(200, 80, passengersss);
+
+
                 }
             }
         }

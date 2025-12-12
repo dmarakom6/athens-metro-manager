@@ -15,17 +15,21 @@ private:
     int passengerCount;
 
 public:
-    Train(float posX, float posY, std::vector<Passenger> Passengers) : VisualAsset(posX, posY)
+    Train(float posX, float posY, std::vector<Passenger*> Passengers) : VisualAsset(posX, posY)
     {
         x = posX;
         y = posY;
-        // brush.fill_color = {0.6f, 0.4f, 0.3f};
+        brush.fill_color = {160.0f, 160.0f, 160.0f};
         passengerCount = Passengers.size();
     }
+
+
+
         void draw() override
         {
             drawRect(x, y, 70, 45, brush);
         }
+        void update(int ms, const graphics::MouseState& mouse) override{};
 
         void removePassenger(int n) const {
               if (n > passengerCount) return;

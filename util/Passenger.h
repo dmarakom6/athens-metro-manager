@@ -26,6 +26,9 @@ public:
         if (!active) return;
         drawDisk(posX, posY, 100, 200, brush);
     }
+
+    //Get
+    int getPassengerCount() const { return passengerCount; }
 };
 
 #endif // PASSENGER_H

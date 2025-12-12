@@ -29,7 +29,7 @@ public:
      @param posY Initial Y position
      */
     VisualAsset(float posX = 0.0f, float posY = 0.0f) 
-        : x(posX), y(posY), active(true) {}
+        : x(posX), y(posY), active(true), dragOffsetX(0.0f), dragOffsetY(0.0f) {}
 
     /**
      * @brief Virtual destructor to ensure proper cleanup of derived classes
@@ -57,8 +57,8 @@ public:
     // Getters
     float getX() const { return x; }
     float getY() const { return y; }
-    bool isActive() const { return active; }
-    bool isDragging() const { return isDragging; }
+    bool getIsActive() const { return active; }
+    bool getIsDragging() const { return isDragging; }
 
     // Setters
     void setX(float posX) { x = posX; }

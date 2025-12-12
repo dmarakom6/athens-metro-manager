@@ -12,47 +12,31 @@ class Train : public VisualAsset
 {
 private:
     Brush brush;
-	int passengerCount;
+    int passengerCount;
 
 public:
     Train(float posX, float posY, std::vector Passengers) : VisualAsset(posX, posY)
     {
+        brush.fill_color[3] = {0.6f, 0.4f, 0.3f};
+        passengerCount = Passengers.size();
+    }
+        void draw() override
+        {
+            drawRect(posX, posY, 70, 45, brush);
+        }
 
-	brush.fill_color[3] = {0.6f, 0.4f, 0.3f};
-	void draw() override {
+        void removePassenger(int n){
+              if (n > passengerCount);
+        }
+        void addPassenger()
+        {
+            return;
+        }
 
-	drawRect(posX, posY, brush);
+        //Get number of Passengers
+        int getPassengerCount() const { return passengerCount; }
 
+        //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
+    };
 
-
-
-
-
-
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	 //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
-	};
-
-
-
-
-
-
-
-
-};
 #endif // TRAIN_H

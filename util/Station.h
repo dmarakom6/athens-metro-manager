@@ -118,7 +118,7 @@ public:
         lineBrush.outline_color[2] = 0.5f;
 
         for (Station* s : next) {
-            if (s && s->isActive()) {
+            if (s && s->getIsActive()) {
                 graphics::drawLine(x, y, s->getX(), s->getY(), lineBrush);
             }
         }

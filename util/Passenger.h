@@ -14,6 +14,8 @@ public:
     Passenger(float posX, float posY)
     : VisualAsset(posX, posY)
     {
+        x = posX;
+        y = posY;
         brush.fill_color[0] = 0.2f;
         brush.fill_color[1] = 0.6f;
         brush.fill_color[2] = 0.9f;
@@ -24,11 +26,11 @@ public:
     void draw() override
     {
         if (!active) return;
-        drawDisk(posX, posY, 100, 200, brush);
+        drawDisk(x, y, 10, brush);
     }
 
-    //Get
-    int getPassengerCount() const { return passengerCount; }
+    void update(int ms, const graphics::MouseState& mouse) override{};
+
 };
 
 #endif // PASSENGER_H

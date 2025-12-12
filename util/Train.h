@@ -15,20 +15,22 @@ private:
     int passengerCount;
 
 public:
-    Train(float posX, float posY, std::vector Passengers) : VisualAsset(posX, posY)
+    Train(float posX, float posY, std::vector<Passenger> Passengers) : VisualAsset(posX, posY)
     {
-        brush.fill_color[3] = {0.6f, 0.4f, 0.3f};
+        x = posX;
+        y = posY;
+        // brush.fill_color = {0.6f, 0.4f, 0.3f};
         passengerCount = Passengers.size();
     }
         void draw() override
         {
-            drawRect(posX, posY, 70, 45, brush);
+            drawRect(x, y, 70, 45, brush);
         }
 
-        void removePassenger(int n){
-              if (n > passengerCount);
+        void removePassenger(int n) const {
+              if (n > passengerCount) return;
         }
-        void addPassenger()
+        void addPassenger() const
         {
             return;
         }

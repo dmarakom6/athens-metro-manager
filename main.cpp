@@ -2,6 +2,8 @@
 #include <sgg/graphics.h>
 #include "util/GlobalState.h"
 #include "util/Station.h"
+#include "util/Passenger.h"
+#include "util/Train.h"
 #include <fstream>
 #include <string>
 #include <vector>
@@ -287,6 +289,9 @@ int main() {
                     Station* station = new Station(random_x, random_y, name);
                     stations_map[name] = station;
                     gs.addVisualAsset(station);
+
+                    Passenger* pas = new Passenger(300, 300);
+                    gs.addVisualAsset(pas);
                 }
             }
         }

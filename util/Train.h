@@ -19,36 +19,40 @@ public:
     {
         x = posX;
         y = posY;
-        brush.fill_color[0] = 160.0f;
-        brush.fill_color[1] = 160.0f;
-        brush.fill_color[2] = 160.0f;
+        //Brush so Train's colour is gray
+        brush.fill_color[0] = 0.65f;
+        brush.fill_color[1] = 0.65f;
+        brush.fill_color[2] = 0.65f;
+        brush.outline_opacity = 0.0f;
         passengerCount = Passengers.size();
     }
 
-
+    //Draw Train as a Rectangle
     void draw() override
     {
-        drawRect(x, y, 70, 45, brush);
+        if (!active) return;
+        drawRect(x, y, 38, 22, brush);
     }
 
+    //TODO: Trains will be displayed below the Station object, doesn't completely disappear tho
     void update(int ms, const graphics::MouseState& mouse) override
     {
     };
 
-    void removePassenger(int n) const
+    //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR FUNCTIONS
+    //Remove or Add Passenger to Train
+    void removePassenger(int n)
     {
         if (n > passengerCount) return;
     }
 
-    void addPassenger() const
+    void addPassenger(int n)
     {
         return;
     }
 
     //Get number of Passengers
     int getPassengerCount() const { return passengerCount; }
-
-    //TODO: REMOVE/ADD PASSENGER FROM/TO TRAIN'S VECTOR (FUNCTION)
 };
 
 #endif // TRAIN_H

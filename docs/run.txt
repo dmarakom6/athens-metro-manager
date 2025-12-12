@@ -8,13 +8,6 @@ You need a C++ compiler (g++ or clang++) and Make installed.
 
 1. LINUX
 --------
-Try running this in terminal:
-  g++ -std=c++17 -Wall -Wextra     -I. -I../sgg -I/usr/include/jsoncpp     main.cpp -o athens-metro-manager  \
-  -L../sgg/lib -lsgg -lSDL2 -lSDL2_mixer -lfreetype -ljsoncpp -lGL -lGLEW
-
-else:
-
-Dependencies:
   sudo apt-get update
   sudo apt-get install build-essential libgl1-mesa-dev libglew-dev libsdl2-dev libsdl2-mixer-dev libfreetype6-dev
 

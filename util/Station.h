@@ -34,7 +34,7 @@ public:
      * @param stationName Name of the station
      * @param r Radius of the station circle
      */
-    Station(float posX, float posY, const std::string& stationName, float r = 20.0f)
+    Station(float posX, float posY, const std::string& stationName, float r = 15.0f)
         : VisualAsset(posX, posY), name(stationName), radius(r), passengerCount(0), 
           isDragging(false), dragOffsetX(0.0f), dragOffsetY(0.0f) {
         // Set up the brush for drawing
@@ -110,9 +110,8 @@ public:
         // Draw connections to next stations (edges)
         // We only draw 'next' connections to avoid drawing lines twice
         graphics::Brush lineBrush;
-        lineBrush.fill_opacity = 0.0f;
         lineBrush.outline_opacity = 1.0f;
-        lineBrush.outline_width = 4.0f;
+        lineBrush.outline_width = 0.8f;
         lineBrush.outline_color[0] = 0.5f;
         lineBrush.outline_color[1] = 0.5f;
         lineBrush.outline_color[2] = 0.5f;

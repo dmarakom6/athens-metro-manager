@@ -10,7 +10,6 @@ class Passenger : public VisualAsset
 {
 private:
     Brush brush;
-
 public:
     Passenger(float posX, float posY)
     : VisualAsset(posX, posY)

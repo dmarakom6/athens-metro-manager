@@ -15,6 +15,7 @@ include_directories(
     ${SGG_3RDPARTY_DIR}/include
     ${SGG_3RDPARTY_DIR}/include/SDL2
     ${SGG_3RDPARTY_DIR}/include/freetype
+    /usr/include/jsoncpp
 )
 
 # Link directories
@@ -33,6 +34,7 @@ add_executable(athens-metro-manager ${SOURCES})
 # Link libraries
 target_link_libraries(athens-metro-manager
     sgg
+    jsoncpp
     "-framework OpenGL"
     "-framework Cocoa"
     "-framework IOKit"

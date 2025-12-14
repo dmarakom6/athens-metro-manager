@@ -34,7 +34,7 @@ public:
      * @param stationName Name of the station
      * @param r Radius of the station circle
      */
-    Station(float posX, float posY, const std::string& stationName, float r = 20.0f)
+    Station(float posX, float posY, const std::string& stationName, float r = 15.0f)
         : VisualAsset(posX, posY), name(stationName), radius(r), passengerCount(0), 
           isDragging(false), dragOffsetX(0.0f), dragOffsetY(0.0f) {
         // Set up the brush for drawing
@@ -78,17 +78,25 @@ public:
                 // Only start dragging if mouse is inside the station radius
                 // AND we are not currently dragging another station (simple check)
                 if (distSq < radius * radius) {
+                    std::cout << "DEBUG: Clicked on " << name << " (DistSq: " << distSq << ", RadSq: " << radius*radius << ")" << std::endl;
                     isDragging = true;
                     dragOffsetX = mx - x;
                     dragOffsetY = my - y;
+                } else if (distSq < (radius + 20) * (radius + 20)) {
+                     // Debug near misses
+                     std::cout << "DEBUG: Missed " << name << " (DistSq: " << distSq << ", RadSq: " << radius*radius << ")" << std::endl;
                 }
             } else {
                 // Continue dragging
                 x = mx - dragOffsetX;
                 y = my - dragOffsetY;
+                std::cout << "DEBUG: Dragging " << name << " to " << x << ", " << y << std::endl;
             }
         } else {
             // Stop dragging
+            if (isDragging) {
+                std::cout << "DEBUG: Released " << name << std::endl;
+            }
             isDragging = false;
         }
     }
@@ -102,15 +110,14 @@ public:
         // Draw connections to next stations (edges)
         // We only draw 'next' connections to avoid drawing lines twice
         graphics::Brush lineBrush;
-        lineBrush.fill_opacity = 0.0f;
         lineBrush.outline_opacity = 1.0f;
-        lineBrush.outline_width = 4.0f;
+        lineBrush.outline_width = 0.8f;
         lineBrush.outline_color[0] = 0.5f;
         lineBrush.outline_color[1] = 0.5f;
         lineBrush.outline_color[2] = 0.5f;
 
         for (Station* s : next) {
-            if (s && s->isActive()) {
+            if (s && s->getIsActive()) {
                 graphics::drawLine(x, y, s->getX(), s->getY(), lineBrush);
             }
         }
@@ -168,6 +175,14 @@ public:
     int getPassengerCount() const { return passengerCount; }
     void addPassenger() { passengerCount++; }
     void removePassenger() { if (passengerCount > 0) passengerCount--; }
+
+    /**
+     * @brief Get adjacent stations (outgoing edges)
+     * @return Vector of pointers to next stations
+     */
+    const std::vector<Station*>& getNext() const {
+        return next;
+    }
 };
 
 #endif // STATION_H

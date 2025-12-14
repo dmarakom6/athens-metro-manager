@@ -78,7 +78,7 @@ class GlobalState {
 
             // Update all visual assets
             for (auto* asset : visualAssets) {
-                if (asset && asset->isActive()) {
+                if (asset && asset->getIsActive()) {
                     asset->update(ms, mouse);
                 }
             }
@@ -95,7 +95,7 @@ class GlobalState {
         void draw() {
             // Draw all visual assets
             for (auto* asset : visualAssets) {
-                if (asset && asset->isActive()) {
+                if (asset && asset->getIsActive()) {
                     asset->draw();
                 }
             }

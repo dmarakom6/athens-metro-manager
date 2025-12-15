@@ -53,9 +53,6 @@ public:
     }
 
     // Randomly pick next station
-    // Note: In a real app we would inject an RNG or use a static one.
-    // For simplicity here using std::rand (assuming seeded in main)
-    // Filter out previous station to avoid immediate U-turn
     std::vector<Station *> validConnections;
     for (Station *s : connections) {
       if (s != previousStation) {
@@ -95,15 +92,8 @@ public:
       }
     }
 
-    // 2. Embark waiting passengers
-    // We need non-const access to station to modify its waiting list
-    // But Station::getWaitingPassengers returns const&.
-    // We should add a method in Station to pop passengers or make it friend.
-    // For this iteration, let's assume we can modify it or we rely on Station
-    // methods. Wait, I didn't add pop method to Station. I added
-    // removeWaitingPassenger.
 
-    // Let's iterate over a copy of waiting passengers to avoid iterator
+    // Iterate over a copy of waiting passengers to avoid iterator
     // invalidation specific issues or just loop and remove.
     std::vector<Passenger *> boarding;
     const auto &waiting = currentStation->getWaitingPassengers();
@@ -111,12 +101,6 @@ public:
     for (Passenger *p : waiting) {
       if ((int)passengers.size() >= capacity)
         break;
-
-      // Logic check: is this train useful for the passenger?
-      // For random walk train, maybe passenger just hops on?
-      // Requirement: "passengers... embark... randomly (based on the
-      // destination)" Let's assume they take any train for now as they don't
-      // know the path.
 
       boarding.push_back(p);
     }

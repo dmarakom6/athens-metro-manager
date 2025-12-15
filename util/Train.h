@@ -28,7 +28,7 @@ private:
 
 public:
   Train(float posX, float posY, Station *startStation)
-      : VisualAsset(posX, posY), capacity(10), speed(0.0005f),
+      : VisualAsset(posX, posY), capacity(6), speed(0.0005f),
         currentStation(startStation), nextStation(nullptr),
         previousStation(nullptr), t(0.0f) {
     x = posX;
@@ -53,7 +53,7 @@ public:
     }
 
     // Randomly pick next station
-    // Note: In a real app we would inject a RNG or use a static one.
+    // Note: In a real app we would inject an RNG or use a static one.
     // For simplicity here using std::rand (assuming seeded in main)
     // Filter out previous station to avoid immediate U-turn
     std::vector<Station *> validConnections;

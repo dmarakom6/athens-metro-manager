@@ -232,7 +232,6 @@ int main() {
     }
   } catch (const std::runtime_error &e) {
     std::cerr << "File error: " << e.what() << std::endl;
-    // Fallback or exit if file is critical
   }
 
   // Randomly spawn trains and passengers for demo

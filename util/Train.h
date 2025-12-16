@@ -128,7 +128,7 @@ public:
       float dx = nextStation->getX() - currentStation->getX();
       float dy = nextStation->getY() - currentStation->getY();
       float angle = std::atan2(dy, dx) * 180.0f / 3.14159f;
-      setOrientation(angle);
+      setOrientation(angle + 90.0f);
     } else {
       setOrientation(0.0f);
     }

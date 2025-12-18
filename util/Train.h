@@ -125,12 +125,27 @@ public:
 
     // Rotate towards next station
     if (currentStation && nextStation) {
-      float dx = nextStation->getX() - currentStation->getX();
-      float dy = nextStation->getY() - currentStation->getY();
-      float angle = std::atan2(dy, dx) * 180.0f / 3.14159f;
-      setOrientation(angle + 90.0f);
-    } else {
-      setOrientation(0.0f);
+      //Get cords of each station
+      float cx = currentStation->getX();
+      float cy = currentStation->getY();
+      float nx = nextStation->getX();
+      float ny = nextStation->getY();
+      //Calculate slope with them and use arctan to convert to degrees
+      float slope = (ny - cy)/(nx - cx);
+      float aa = atan(slope);
+      float angle = aa * 180/M_PI;
+      float orient;
+      if (cx == nx)
+      {
+        orient = 90;
+      } else if (cy == ny)
+      {
+        orient = 0;
+      } else
+      {
+        orient = angle;
+      }
+      graphics::setOrientation(angle);
     }
 
     drawRect(x, y, width, height, brush);

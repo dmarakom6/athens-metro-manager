@@ -76,7 +76,7 @@ public:
     float mx = graphics::windowToCanvasX((float)mouse.cur_pos_x);
     float my = graphics::windowToCanvasY((float)mouse.cur_pos_y);
 
-    if (mouse.button_left_pressed) {
+    if (mouse.button_left_down) {
       if (!isDragging) {
         // Check if clicked on this station
         float dx = mx - x;
@@ -100,6 +100,8 @@ public:
         // Continue dragging
         x = mx - dragOffsetX;
         y = my - dragOffsetY;
+        //TODO: make this not repeat the whole time
+        if (mouse.cur_pos_x != mouse.prev_pos_x) //smth like that maybeee
         std::cout << "DEBUG: Dragging " << name << " to " << x << ", " << y
                   << std::endl;
       }
@@ -145,13 +147,12 @@ public:
     float mx = graphics::windowToCanvasX((float)ms.cur_pos_x);
     float my = graphics::windowToCanvasY((float)ms.cur_pos_y);
 
-    // Calculate distance squared
-    float dx = mx - x;
-    float dy = my - y;
-    float distSq = dx * dx + dy * dy;
+    // Calculate distance
+    float dx = std::abs(mx - x);
+    float dy = std::abs(my - y);
 
-    // If hovered (distance < radius) or dragging, draw the name
-    if (distSq < radius * radius || isDragging) {
+    // If hovered (distance < radius), draw the name
+    if (dx < radius && dy < radius) {
       graphics::Brush textBrush;
       textBrush.fill_color[0] = 1.0f;
       textBrush.fill_color[1] = 1.0f;
@@ -178,6 +179,11 @@ public:
       highlightBrush.outline_color[1] = 1.0f;
       highlightBrush.outline_color[2] = 1.0f;
       graphics::drawDisk(x, y, radius + 2, highlightBrush);
+      //also check if dragging station and move accordingly
+      if (ms.button_left_down && dx < radius && dy < radius)
+      {
+        setPosition(mx, my);
+      }
     }
   }
 

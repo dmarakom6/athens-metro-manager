@@ -32,6 +32,10 @@ private:
   float dragOffsetX;
   float dragOffsetY;
 
+  // Save temporary x and y of dragging station debug
+  float x2 = -1.0;
+  float y2 = -1.0;
+
 public:
   /**
    * @brief Constructor for Station
@@ -100,11 +104,14 @@ public:
         // Continue dragging
         x = mx - dragOffsetX;
         y = my - dragOffsetY;
-        //TODO: make this not repeat the whole time
-        if (mouse.cur_pos_x != mouse.prev_pos_x) //smth like that maybeee
-        std::cout << "DEBUG: Dragging " << name << " to " << x << ", " << y
-                  << std::endl;
-      }
+        if (x2 != x || y2 != y)
+        {
+          std::cout << "DEBUG: Dragging " << name << " to " << x << ", " << y
+                    << std::endl;
+          x2 = x;
+          y2 = y;
+        }
+        }
     } else {
       // Stop dragging
       if (isDragging) {

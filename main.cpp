@@ -15,6 +15,9 @@
 #include <string>
 #include <vector>
 
+Station *Station::s_active_dragging_station =
+    nullptr; // active dragging station
+
 // Forward declarations for callback functions
 void draw();
 void update(float ms);

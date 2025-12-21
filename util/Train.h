@@ -16,7 +16,7 @@ class Train : public VisualAsset {
 private:
   Brush brush;
   std::vector<Passenger *> passengers;
-  int capacity;
+  int capacity = 6;
   float speed;
   float height = 38.0;
   float width = 22.0;
@@ -100,10 +100,9 @@ public:
     const auto &waiting = currentStation->getWaitingPassengers();
 
     for (Passenger *p : waiting) {
-      if ((int)passengers.size() >= capacity)
-        break;
-
-      boarding.push_back(p);
+      if ((int)passengers.size() < capacity) {
+        boarding.push_back(p);
+      }
     }
 
     for (Passenger *p : boarding) {
@@ -125,24 +124,21 @@ public:
 
     // Rotate towards next station
     if (currentStation && nextStation) {
-      //Get cords of each station
+      // Get cords of each station
       float cx = currentStation->getX();
       float cy = currentStation->getY();
       float nx = nextStation->getX();
       float ny = nextStation->getY();
-      //Calculate slope with them and use arctan to convert to degrees
-      float slope = (ny - cy)/(nx - cx);
+      // Calculate slope with them and use arctan to convert to degrees
+      float slope = (ny - cy) / (nx - cx);
       float aa = atan(slope);
-      float angle = aa * 180/M_PI;
+      float angle = aa * 180 / M_PI;
       float orient;
-      if (cx == nx)
-      {
+      if (cx == nx) {
         orient = 90;
-      } else if (cy == ny)
-      {
+      } else if (cy == ny) {
         orient = 0;
-      } else
-      {
+      } else {
         orient = angle;
       }
       graphics::setOrientation(angle);

@@ -1,6 +1,7 @@
 #ifndef TRAIN_H
 #define TRAIN_H
 
+#include "GlobalState.h"
 #include "Passenger.h"
 #include "Station.h"
 #include "VisualAsset.h"
@@ -87,6 +88,7 @@ public:
         // p->setActive(false); // Maybe hide them or keep them visible at
         // station? For now, let's just remove them from train
         it = passengers.erase(it);
+        GlobalState::getInstance().addScore(10);
         std::cout << "Passenger disembarked at " << currentStation->getName()
                   << std::endl;
       } else {

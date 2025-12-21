@@ -81,15 +81,6 @@ void draw() {
 void update(float ms) {
   // Update all visual assets through GlobalState
   GlobalState::getInstance().update(static_cast<int>(ms));
-
-  // Simple score increment for demo purposes
-  static float timeAccumulator = 0.0f;
-  timeAccumulator += ms;
-  if (timeAccumulator >= 1000.0f) {
-    // Every second
-    GlobalState::getInstance().addScore(10);
-    timeAccumulator = 0.0f;
-  }
 }
 
 // Forward declaration
@@ -243,32 +234,48 @@ int main() {
     station_list.push_back(station);
   }
 
-  if (!station_list.empty()) {
-    // Spawn 3 trains at random stations
+  if (!station_list.empty() && station_list.size() >= 3) {
+    int used_stations[3];
+
     for (int i = 0; i < 3; ++i) {
-      int startIdx = rand() % station_list.size();
+      int startIdx;
+      bool is_duplicate;
+
+      do {
+        is_duplicate = false;
+        startIdx = rand() % station_list.size();
+
+        // Check against all previously selected indices
+        for (int j = 0; j < i; ++j) {
+          if (used_stations[j] == startIdx) {
+            is_duplicate = true;
+            break;
+          }
+        }
+      } while (is_duplicate);
+
+      used_stations[i] = startIdx;
       Station *start = station_list[startIdx];
       Train *train = new Train(start->getX(), start->getY(), start);
       gs.addVisualAsset(train);
     }
+  }
+  // Spawn 20 passengers with random destinations
+  for (int i = 0; i < 20; ++i) {
+    int startIdx = rand() % station_list.size();
+    int endIdx = rand() % station_list.size();
 
-    // Spawn 20 passengers with random destinations
-    for (int i = 0; i < 20; ++i) {
-      int startIdx = rand() % station_list.size();
-      int endIdx = rand() % station_list.size();
-
-      // Ensure dest != start ideally
-      while (startIdx == endIdx && station_list.size() > 1) {
-        endIdx = rand() % station_list.size();
-      }
-
-      Station *start = station_list[startIdx];
-      Station *end = station_list[endIdx];
-
-      Passenger *p = new Passenger(start->getX(), start->getY(), end);
-      gs.addVisualAsset(p);
-      start->addWaitingPassenger(p);
+    // Ensure dest != start ideally
+    while (startIdx == endIdx && station_list.size() > 1) {
+      endIdx = rand() % station_list.size();
     }
+
+    Station *start = station_list[startIdx];
+    Station *end = station_list[endIdx];
+
+    Passenger *p = new Passenger(start->getX(), start->getY(), end);
+    gs.addVisualAsset(p);
+    start->addWaitingPassenger(p);
   }
 
   std::cout << "Athens Metro Manager Demo Started!" << std::endl;

@@ -109,6 +109,10 @@ public:
                     << std::endl;
           x2 = x;
           y2 = y;
+          for (Passenger *p :
+               waitingPassengers) { // dragging passengers with the station
+            p->setPosition(x, y);
+          }
         }
       }
     } else {
@@ -117,6 +121,35 @@ public:
         std::cout << "DEBUG: Released " << name << std::endl;
       }
       isDragging = false;
+
+      // Update waiting passengers position to follow station
+      // Arrange passengers in two rows, alternating positions
+      float passenger_row_offset = radius * (1.0f / 6.0f);
+      float passenger_spacing =
+          radius / (static_cast<float>(passengerCount / 2) +
+                    1.0f); // Spacing between passengers in a row
+
+      int passenger_in_row_idx = 0; // Index for passenger within their row
+      for (size_t i = 0; i < waitingPassengers.size(); ++i) {
+        Passenger *p = waitingPassengers[i];
+        float pasx, pasy;
+
+        if (i % 2 == 0) // Even index: top row
+        {
+          pasy = y + passenger_row_offset - 5;
+          pasx = x - radius / 2.0f +
+                 (passenger_in_row_idx + 1) * passenger_spacing;
+        } else // Odd index: bottom row
+        {
+          pasy = y - passenger_row_offset - 10;
+          pasx = x - radius / 2.0f +
+                 (passenger_in_row_idx + 1) * passenger_spacing;
+          passenger_in_row_idx++; // Increment for the next pair of passengers
+        }
+        p->setPosition(pasx - radius - 5,
+                       pasy - radius * 1.5f); // Set the new position of the
+                                              // passenger (y axis is inverted)
+      }
     }
   }
 

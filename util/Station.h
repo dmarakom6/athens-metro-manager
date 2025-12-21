@@ -104,14 +104,13 @@ public:
         // Continue dragging
         x = mx - dragOffsetX;
         y = my - dragOffsetY;
-        if (x2 != x || y2 != y)
-        {
+        if (x2 != x || y2 != y) {
           std::cout << "DEBUG: Dragging " << name << " to " << x << ", " << y
                     << std::endl;
           x2 = x;
           y2 = y;
         }
-        }
+      }
     } else {
       // Stop dragging
       if (isDragging) {
@@ -174,9 +173,9 @@ public:
 
       // Estimate text width (rough approximation)
       float textWidth = name.length() * 8.0f;
-      graphics::drawRect(x, y - radius - 25, textWidth + 10, 20, bgBrush);
+      graphics::drawRect(x, y + radius + 25, textWidth + 10, 20, bgBrush);
 
-      graphics::drawText(x - textWidth / 2, y - radius - 20, 14, name,
+      graphics::drawText(x - textWidth / 2, y + radius + 30, 14, name,
                          textBrush);
 
       // Highlight the station
@@ -186,9 +185,8 @@ public:
       highlightBrush.outline_color[1] = 1.0f;
       highlightBrush.outline_color[2] = 1.0f;
       graphics::drawDisk(x, y, radius + 2, highlightBrush);
-      //also check if dragging station and move accordingly
-      if (ms.button_left_down && dx < radius && dy < radius)
-      {
+      // also check if dragging station and move accordingly
+      if (ms.button_left_down && dx < radius && dy < radius) {
         setPosition(mx, my);
       }
     }

@@ -265,7 +265,7 @@ int main() {
     int startIdx = rand() % station_list.size();
     int endIdx = rand() % station_list.size();
 
-    // Ensure dest != start ideally
+    // Ensure dest != start ideally, and make sure not more than 6 passengers spawn in the same station
     while (startIdx == endIdx && station_list.size() > 1) {
       endIdx = rand() % station_list.size();
     }
@@ -273,9 +273,15 @@ int main() {
     Station *start = station_list[startIdx];
     Station *end = station_list[endIdx];
 
-    Passenger *p = new Passenger(start->getX(), start->getY(), end);
-    gs.addVisualAsset(p);
-    start->addWaitingPassenger(p);
+    if (start->getPassengerCount() <= 6)
+    {
+      Passenger *p = new Passenger(start->getX(), start->getY(), end);
+      gs.addVisualAsset(p);
+      start->addWaitingPassenger(p);
+    } else
+    {
+      std::cerr << "Warning: Passenger count " << start->getPassengerCount();
+    }
   }
 
   std::cout << "Athens Metro Manager Demo Started!" << std::endl;

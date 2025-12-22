@@ -125,7 +125,7 @@ public:
           passenger_in_row_idx++;
         }
         // Your specific offset: pasx - radius - 5, pasy - radius * 1.5f
-        p->setPosition(pasx - radius - 5, pasy - radius * 1.5f);
+        p->setPosition(pasx - radius - 7.5, pasy - radius * 1.5f);
       }
     }
   }

@@ -14,7 +14,7 @@ public:
 
 private:
   float radius;
-  graphics::Brush waintingBrush;
+  graphics::Brush waitingBrush;
   graphics::Brush onTrainBrush;
   Station *destination;
   State state;
@@ -23,10 +23,10 @@ public:
   Passenger(float posX, float posY, Station *dest)
       : VisualAsset(posX, posY), radius(4.0f), destination(dest),
         state(WAITING) {
-    waintingBrush.fill_color[0] = 1.0f; // R
-    waintingBrush.fill_color[1] = 0.2f; // G
-    waintingBrush.fill_color[2] = 0.2f; // B
-    waintingBrush.outline_opacity = 0.0f;
+    waitingBrush.fill_color[0] = 1.0f; // R
+    waitingBrush.fill_color[1] = 0.2f; // G
+    waitingBrush.fill_color[2] = 0.2f; // B
+    waitingBrush.outline_opacity = 0.0f;
 
     onTrainBrush.fill_color[0] = 1.0f; // R
     onTrainBrush.fill_color[1] = 0.7f; // G
@@ -46,7 +46,7 @@ public:
 
     // Draw slightly different if waiting
     if (state == WAITING) {
-      graphics::drawDisk(x, y, radius, waintingBrush);
+      graphics::drawDisk(x, y, radius, waitingBrush);
     } else if (state == ON_TRAIN) {
       graphics::drawDisk(x, y, radius, onTrainBrush); // Draw on train too
     }

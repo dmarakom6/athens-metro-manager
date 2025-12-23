@@ -270,17 +270,13 @@ int main() {
       endIdx = rand() % station_list.size();
     }
 
-    Station *start = station_list[startIdx];
-    Station *end = station_list[endIdx];
-
-    if (start->getPassengerCount() <= 6)
+    if (station_list[startIdx]->getPassengerCount() <= 6)
     {
+      Station *start = station_list[startIdx];
+      Station *end = station_list[endIdx];
       Passenger *p = new Passenger(start->getX(), start->getY(), end);
       gs.addVisualAsset(p);
       start->addWaitingPassenger(p);
-    } else
-    {
-      std::cerr << "Warning: Passenger count " << start->getPassengerCount();
     }
   }
 

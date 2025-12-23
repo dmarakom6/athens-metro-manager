@@ -132,18 +132,9 @@ public:
       float nx = nextStation->getX();
       float ny = nextStation->getY();
       // Calculate slope with them and use arctan to convert to degrees
-      float slope = (ny - cy) / (nx - cx);
-      float aa = atan(slope);
+      float aa = atan2(cy - ny, nx - cx); // the y axis is inverted
       float angle = aa * 180 / M_PI;
-      float orient;
-      if (cx == nx) {
-        orient = 90;
-      } else if (cy == ny) {
-        orient = 0;
-      } else {
-        orient = angle;
-      }
-      graphics::setOrientation(angle);
+      graphics::setOrientation(angle + 90);
     }
 
     drawRect(x, y, width, height, brush);

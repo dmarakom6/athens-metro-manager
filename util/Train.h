@@ -132,8 +132,8 @@ public:
       float nx = nextStation->getX();
       float ny = nextStation->getY();
       // Calculate slope with them and use arctan to convert to degrees
-      float aa = atan2(cy - ny, nx - cx); // the y axis is inverted
-      float angle = aa * 180 / M_PI;
+      float slope = atan((ny - cy) / (cx - nx)); // the y axis is inverted (also using atan to use slope again later)
+      float angle = slope * 180 / M_PI;
       graphics::setOrientation(angle + 90);
     }
 

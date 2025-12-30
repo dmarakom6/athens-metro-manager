@@ -89,8 +89,10 @@ public:
         // station? For now, let's just remove them from train
         it = passengers.erase(it);
         GlobalState::getInstance().addScore(10);
-        std::cout << "Passenger disembarked at " << currentStation->getName()
-                  << std::endl;
+        if (GlobalState::getInstance().isDebugMode()) {
+          std::cout << "Passenger disembarked at " << currentStation->getName()
+                    << std::endl;
+        }
       } else {
         ++it;
       }
@@ -114,8 +116,10 @@ public:
       currentStation->removeWaitingPassenger(p);
       p->setState(Passenger::ON_TRAIN);
       passengers.push_back(p);
-      std::cout << "Passenger embarked at " << currentStation->getName()
-                << std::endl;
+      if (GlobalState::getInstance().isDebugMode()) {
+        std::cout << "Passenger embarked at " << currentStation->getName()
+                  << std::endl;
+      }
     }
 
     // 3. Move to next

@@ -64,7 +64,9 @@ public:
     Json::Value metro;
     people_file >> metro;
 
-    std::cout << metro << std::endl;
+    if (debugMode) {
+      std::cout << metro << std::endl;
+    }
   }
 
   /**
@@ -164,7 +166,14 @@ private:
    */
   GlobalState()
       : level(0), score(0), windowWidth(800), windowHeight(600),
-        simulating(false) {}
+        simulating(false), debugMode(false) {}
+
+public:
+  bool isDebugMode() const { return debugMode; }
+  void setDebugMode(bool debug) { debugMode = debug; }
+
+private:
+  bool debugMode;
 
   /**
    * @brief Private destructor - cleans up all visual assets

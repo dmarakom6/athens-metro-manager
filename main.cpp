@@ -110,7 +110,16 @@ void setupSimulationButton() {
  *
  * Sets up the SGG window, creates demo stations, and starts the message loop.
  */
-int main() {
+int main(int argc, char *argv[]) {
+  // Check for -DEBUG flag
+  bool debug = false;
+  for (int i = 1; i < argc; ++i) {
+    if (std::string(argv[i]) == "-DEBUG") {
+      debug = true;
+      break;
+    }
+  }
+
   // Create window with SGG
   graphics::createWindow(800, 600, "Athens Metro Manager");
 
@@ -122,6 +131,9 @@ int main() {
 
   // Get GlobalState instance
   GlobalState &gs = GlobalState::getInstance();
+
+  // Set debug mode
+  gs.setDebugMode(debug);
 
   // Set window size in GlobalState
   gs.setWindowSize(800, 600);
@@ -182,10 +194,12 @@ int main() {
           }
 
           if (!position_found) {
-            std::cerr << "Warning: Could not find a non-overlapping position "
-                         "for station '"
-                      << name << "' after " << MAX_ATTEMPTS
-                      << " attempts. Placing it anyway." << std::endl;
+            if (gs.isDebugMode()) {
+              std::cerr << "Warning: Could not find a non-overlapping position "
+                           "for station '"
+                        << name << "' after " << MAX_ATTEMPTS
+                        << " attempts. Placing it anyway." << std::endl;
+            }
             // Fallback: place it even if it overlaps, or handle error
             random_x = x_dist(rng); // Place randomly one last time
             random_y = y_dist(rng);
@@ -214,9 +228,11 @@ int main() {
                 if (stations_map.count(connection_name)) {
                   current_station->addNext(stations_map[connection_name]);
                 } else {
-                  std::cerr << "Warning: Connection to unknown station '"
-                            << connection_name << "' for station '" << name
-                            << "'" << std::endl;
+                  if (gs.isDebugMode()) {
+                    std::cerr << "Warning: Connection to unknown station '"
+                              << connection_name << "' for station '" << name
+                              << "'" << std::endl;
+                  }
                 }
               }
             }
@@ -265,13 +281,13 @@ int main() {
     int startIdx = rand() % station_list.size();
     int endIdx = rand() % station_list.size();
 
-    // Ensure dest != start ideally, and make sure not more than 6 passengers spawn in the same station
+    // Ensure dest != start ideally, and make sure not more than 6 passengers
+    // spawn in the same station
     while (startIdx == endIdx && station_list.size() > 1) {
       endIdx = rand() % station_list.size();
     }
 
-    if (station_list[startIdx]->getPassengerCount() <= 6)
-    {
+    if (station_list[startIdx]->getPassengerCount() <= 6) {
       Station *start = station_list[startIdx];
       Station *end = station_list[endIdx];
       Passenger *p = new Passenger(start->getX(), start->getY(), end);
@@ -281,13 +297,16 @@ int main() {
   }
 
   std::cout << "Athens Metro Manager Demo Started!" << std::endl;
-  std::cout << "Demonstrating:" << std::endl;
-  std::cout << "  - VisualAsset base class with polymorphic draw() and update()"
-            << std::endl;
-  std::cout << "  - GlobalState singleton managing all visual assets"
-            << std::endl;
-  std::cout << "  - Station class inheriting from VisualAsset" << std::endl;
-  std::cout << "  - SGG library integration" << std::endl;
+  if (gs.isDebugMode()) {
+    std::cout << "Demonstrating:" << std::endl;
+    std::cout
+        << "  - VisualAsset base class with polymorphic draw() and update()"
+        << std::endl;
+    std::cout << "  - GlobalState singleton managing all visual assets"
+              << std::endl;
+    std::cout << "  - Station class inheriting from VisualAsset" << std::endl;
+    std::cout << "  - SGG library integration" << std::endl;
+  }
 
   // Set callback functions for SGG
   graphics::setDrawFunction(draw);

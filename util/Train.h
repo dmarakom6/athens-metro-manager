@@ -102,8 +102,11 @@ public:
     const auto &waiting = currentStation->getWaitingPassengers();
 
     for (Passenger *p : waiting) {
-      if ((int)passengers.size() < capacity) {
+      if ((int)passengers.size() + (int)boarding.size() <
+          capacity) { // classic java-style cast
         boarding.push_back(p);
+      } else {
+        break;
       }
     }
 
@@ -132,7 +135,9 @@ public:
       float nx = nextStation->getX();
       float ny = nextStation->getY();
       // Calculate slope with them and use arctan to convert to degrees
-      float slope = atan((ny - cy) / (cx - nx)); // the y axis is inverted (also using atan to use slope again later)
+      float slope =
+          atan((ny - cy) / (cx - nx)); // the y axis is inverted (also using
+                                       // atan to use slope again later)
       float angle = slope * 180 / M_PI;
       graphics::setOrientation(angle + 90);
     }
@@ -172,24 +177,42 @@ public:
         width / (static_cast<float>(capacity / 2) +
                  1.0f); // Spacing between passengers in a row
 
+    // Calculate train rotation angle based on movement direction
+    float dx = nextStation->getX() - currentStation->getX();
+    float dy = nextStation->getY() - currentStation->getY();
+    float angle = std::atan2(dy, dx) +
+                  M_PI / 2.0f; // Rotate so -Y (top) points to direction
+
+    float c = std::cos(angle);
+    float s = std::sin(angle);
+
     int passenger_in_row_idx = 0; // Index for passenger within their row
     for (size_t i = 0; i < passengers.size(); ++i) {
       Passenger *p = passengers[i];
-      float pasx, pasy;
+      float local_x, local_y;
 
-      if (i % 2 == 0) // Even index: top row
+      // Calculate local position relative to train center (0,0)
+      if (i % 2 == 0) // Even index: One side
       {
-        pasy = y + passenger_row_offset;
-        pasx =
-            x - width / 2.0f + (passenger_in_row_idx + 1) * passenger_spacing;
-      } else // Odd index: bottom row
+        local_y = passenger_row_offset;
+        local_x =
+            -width / 2.0f + (passenger_in_row_idx + 1) * passenger_spacing;
+      } else // Odd index: Other side
       {
-        pasy = y - passenger_row_offset;
-        pasx =
-            x - width / 2.0f + (passenger_in_row_idx + 1) * passenger_spacing;
-        passenger_in_row_idx++; // Increment for the next pair of passengers
+        local_y = -passenger_row_offset;
+        local_x =
+            -width / 2.0f + (passenger_in_row_idx + 1) * passenger_spacing;
+        passenger_in_row_idx++; // Increment for the next pair
       }
-      p->setPosition(pasx, pasy); // Set the new position of the passenger
+
+      // Rotate position around (0,0)
+      // Apply 2D rotation matrix:
+      // x' = x*cos(theta) - y*sin(theta)
+      // y' = x*sin(theta) + y*cos(theta)
+      float rotated_x = local_x * c - local_y * s;
+      float rotated_y = local_x * s + local_y * c;
+
+      p->setPosition(x + rotated_x, y + rotated_y); // Set new global position
     }
   };
 

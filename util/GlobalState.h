@@ -2,10 +2,13 @@
 #define GLOBAL_STATE_H
 
 #include "VisualAsset.h"
+#include <atomic>
+#include <chrono>
 #include <fstream>
 #include <iostream>
 #include <json/json.h>
 #include <memory>
+#include <thread>
 #include <vector>
 
 /**
@@ -20,10 +23,13 @@ class GlobalState {
 
 private:
   int level;
-  int score;
+  std::atomic<int> score;
   int windowWidth;
   int windowHeight;
-  bool simulating;
+  std::atomic<bool> simulating;
+
+  std::thread score_thread;
+  std::atomic<bool> keep_thread_alive;
 
   // STL container to manage all visual assets (stations, trains, passengers, UI
   // elements)
@@ -67,6 +73,24 @@ public:
     if (debugMode) {
       std::cout << metro << std::endl;
     }
+
+    // Start score thread
+    keep_thread_alive = true;
+    score_thread = std::thread([this]() {
+      while (keep_thread_alive) {
+        std::this_thread::sleep_for(std::chrono::seconds(10));
+        if (!keep_thread_alive)
+          break;
+
+        // Only subtract score if simulation is running
+        if (simulating) {
+          score -= 2;
+          // ensure score doesn't go below 0
+          if (score < 0)
+            score = 0;
+        }
+      }
+    });
   }
 
   /**
@@ -166,7 +190,7 @@ private:
    */
   GlobalState()
       : level(0), score(0), windowWidth(800), windowHeight(600),
-        simulating(false), debugMode(false) {}
+        simulating(false), keep_thread_alive(true), debugMode(false) {}
 
 public:
   bool isDebugMode() const { return debugMode; }
@@ -179,6 +203,12 @@ private:
    * @brief Private destructor - cleans up all visual assets
    */
   ~GlobalState() {
+    // Stop thread
+    keep_thread_alive = false;
+    if (score_thread.joinable()) {
+      score_thread.join();
+    }
+
     // Clean up all visual assets
     for (auto *asset : visualAssets) {
       delete asset;

@@ -79,8 +79,33 @@ void draw() {
  * It delegates to GlobalState which calls update() on all VisualAssets.
  */
 void update(float ms) {
+  GlobalState &gs = GlobalState::getInstance();
   // Update all visual assets through GlobalState
-  GlobalState::getInstance().update(static_cast<int>(ms));
+  gs.update(static_cast<int>(ms));
+
+  // Check if all passengers have completed their journey
+  if (gs.isSimulating()) {
+    const auto &assets = gs.getVisualAssets();
+    int totalPassengers = 0;
+    int completedPassengers = 0;
+
+    for (VisualAsset *asset : assets) {
+      Passenger *p = dynamic_cast<Passenger *>(asset);
+      if (p) {
+        totalPassengers++;
+        if (p->getState() == Passenger::COMPLETED) {
+          completedPassengers++;
+        }
+      }
+    }
+
+    // End simulation if all passengers have arrived
+    if (totalPassengers > 0 && totalPassengers == completedPassengers) {
+      std::cout << "All passengers have arrived! Simulation Ending."
+                << std::endl;
+      graphics::stopMessageLoop();
+    }
+  }
 }
 
 // Forward declaration

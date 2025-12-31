@@ -43,7 +43,7 @@ The project is best developed on Linux or macOS.
 For Windows, you would need to:
 1. Install MinGW-w64
 2. Ensure all dependencies (SDL2, GLEW, etc.) are available in the library path
-3. Use the provided Makefile (you might need to adjust paths manually)
+3. Use the provided Makefile
 
 TROUBLESHOOTING
 ---------------

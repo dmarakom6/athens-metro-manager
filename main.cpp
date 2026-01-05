@@ -18,6 +18,9 @@
 Station *Station::s_active_dragging_station =
     nullptr; // active dragging station
 
+int totalPassengers = 0;
+int completedPassengers = 0;
+
 // Forward declarations for callback functions
 void draw();
 void update(float ms);
@@ -85,12 +88,14 @@ void update(float ms) {
 
   // Check if all passengers have completed their journey
   if (gs.isSimulating()) {
-    const auto &assets = gs.getVisualAssets();
-    int totalPassengers = 0;
-    int completedPassengers = 0;
+    totalPassengers = 0;
+    completedPassengers = 0;
+    const auto &passengers = gs.getPassengers();
 
-    for (VisualAsset *asset : assets) {
-      Passenger *p = dynamic_cast<Passenger *>(asset);
+    for (VisualAsset *asset : passengers) {
+      // With categorized vectors, we can safely static_cast if we are sure of
+      // the type
+      Passenger *p = static_cast<Passenger *>(asset);
       if (p) {
         totalPassengers++;
         if (p->getState() == Passenger::COMPLETED) {
@@ -101,9 +106,13 @@ void update(float ms) {
 
     // End simulation if all passengers have arrived
     if (totalPassengers > 0 && totalPassengers == completedPassengers) {
+      std::this_thread::sleep_for(std::chrono::seconds(1));
       std::cout << "All passengers have arrived! Simulation Ending."
                 << std::endl;
-      graphics::stopMessageLoop();
+      std::cout << "Final score: " << gs.getScore() << std::endl;
+      // Using exit(0) ensures the application terminates immediately 
+      // without waiting for additional input events to process a shutdown signal.
+      std::exit(0);
     }
   }
 }
@@ -232,7 +241,7 @@ int main(int argc, char *argv[]) {
 
           Station *station = new Station(random_x, random_y, name);
           stations_map[name] = station;
-          gs.addVisualAsset(station);
+          gs.addStation(station);
         }
       }
     }
@@ -298,7 +307,7 @@ int main(int argc, char *argv[]) {
       used_stations[i] = startIdx;
       Station *start = station_list[startIdx];
       Train *train = new Train(start->getX(), start->getY(), start);
-      gs.addVisualAsset(train);
+      gs.addTrain(train);
     }
   }
   // Spawn 20 passengers with random destinations
@@ -316,7 +325,7 @@ int main(int argc, char *argv[]) {
       Station *start = station_list[startIdx];
       Station *end = station_list[endIdx];
       Passenger *p = new Passenger(start->getX(), start->getY(), end);
-      gs.addVisualAsset(p);
+      gs.addPassenger(p);
       start->addWaitingPassenger(p);
     }
   }
